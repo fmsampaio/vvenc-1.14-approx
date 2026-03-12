@@ -682,7 +682,12 @@ bool IntraSearch::estIntraPredLumaQT(CodingUnit &cu, Partitioner &partitioner, d
       // determine residual for partition
       cs.initSubStructure(*csTemp, partitioner.chType, cs.area, true);
       int doISP = (((cu.ispMode == 0) && noLFNST) || (useISPlfnst && mode && cu.ispMode && (bestLfnstIdx == 0)) || disableLFNST) ? -mode : mode;
+      
+#if ENABLE_NEIGH_SB_APPROX || ENABLE_ORIG_SB_APPROX
+      xIntraCodingLumaQT(*csTemp, partitioner, nullptr, bestCost, doISP, disableMTS);
+#else
       xIntraCodingLumaQT(*csTemp, partitioner, m_SortedPelUnitBufs->getBufFromSortedList(mode), bestCost, doISP, disableMTS);
+#endif
 
       DTRACE(g_trace_ctx, D_INTRA_COST, "IntraCost T [x=%d,y=%d,w=%d,h=%d] %f (%d,%d,%d,%d,%d,%d) \n", cu.blocks[0].x,
         cu.blocks[0].y, width, height, csTemp->cost, testMode.modeId, testMode.ispMod,
