@@ -600,6 +600,7 @@ int parse( int argc, char* argv[], vvenc_config* c, std::ostream& rcOstr )
   IStreamToEnum<int8_t>             toChromaLocInfo               ( &c->m_chromaLocInfoPresent,        &FlagToIntMap<int8_t> );
   IStreamToEnum<int8_t>             toMtProfile                   ( &c->m_mtProfile,                   &MtAbrevToIntMap );
   IStreamToInt8                     toNumParallelGOPs             ( &c->m_numParallelGOPs );
+  IStreamToArr<char>                toDynApproxFileName           ( &c->dynApproxFileName[0], VVENC_MAX_STRING_LEN);
 
   po::Options opts;
   if( m_easyMode )
@@ -1231,6 +1232,8 @@ int parse( int argc, char* argv[], vvenc_config* c, std::ostream& rcOstr )
     ("internal-bitdepth",                               c->m_internalBitDepth[0],                            "internal bitdepth (8, 10)")
     ("refreshtype,-rt",                                 toDecRefreshType,                                    "intra refresh type (idr, cra, cra_cre: CRA, constrained RASL picture encoding)")
     ("decodedpicturehash,-dph",                         toHashType,                                          "control generation of decode picture hash SEI messages, (0: off, 1: md5, 2: crc, 3: checksum)")
+    ("dynapproxcfgfile, -dacf",                         toDynApproxFileName,                                "configuration file for dynamic approx. storage")
+
     ;
   }
 
