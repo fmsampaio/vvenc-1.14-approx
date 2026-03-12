@@ -114,8 +114,12 @@ void EncLib::initEncoderLib( const vvenc_config& encCfg )
   // copy config parameter
   const_cast<VVEncCfg&>(m_encCfg) = encCfg;
 
-#if ENABLE_DYNAMIC_APPROX
+#if APPROX_STRATEGY != 0
   ApproxHandler::initDynApprox(m_encCfg.dynApproxFileName);
+#endif
+
+#if APPROX_STRATEGY == 2
+  ApproxHandler::initCuLevelApprox(m_encCfg.m_SourceWidth, m_encCfg.m_SourceHeight, m_encCfg.m_framesToBeEncoded);
 #endif
 
 #if defined( REAL_TARGET_X86 ) && defined( _MSC_VER ) && _MSC_VER >= 1938 && _MSC_VER < 1939

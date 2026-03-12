@@ -218,18 +218,29 @@ void IntraSearch::xEstimateLumaRdModeList(int& numModesForFullRD,
     piOrg = cu.cs->getRspOrgBuf();
   }
 
-  #if ENABLE_DYNAMIC_APPROX
+#if APPROX_STRATEGY == 1 // FRAME LEVEL DYNAMIC
 
   #if ENABLE_ORIG_SB_APPROX
   ApproxHandler::addApproxIntraOrigSB(COMP_Y, cu.slice->TLayer);
   #endif
 
   #if ENABLE_NEIGH_SB_APPROX
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_FILTERED), COMP_Y, cu.slice->TLayer, 1);
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_UNFILTERED), COMP_Y, cu.slice->TLayer, 0);
+  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_FILTERED), COMP_Y, 1, cu.slice->TLayer);
+  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_UNFILTERED), COMP_Y, 0, cu.slice->TLayer);
   #endif
 
-#else // not ENABLE_DYNAMIC_APPROX ==> STATIC
+#elif APPROX_STRATEGY == 2 // CU LEVEL DYNAMIC
+
+  #if ENABLE_ORIG_SB_APPROX
+  ApproxHandler::addApproxIntraOrigSB(COMP_Y, cu.slice->TLayer, cu.slice->poc, cu.lx(), cu.ly(), cu.lwidth(), cu.lheight());
+  #endif
+
+  #if ENABLE_NEIGH_SB_APPROX
+  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_FILTERED), COMP_Y,  1, cu.slice->TLayer, cu.slice->poc, cu.lx(), cu.ly(), cu.lwidth(), cu.lheight());
+  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_UNFILTERED), COMP_Y,  0, cu.slice->TLayer, cu.slice->poc, cu.lx(), cu.ly(), cu.lwidth(), cu.lheight());
+  #endif
+
+#else // APPROX_STRATEGY == 0 ==> STATIC
 
   #if ENABLE_ORIG_SB_APPROX
   ApproxHandler::addApproxIntraOrigSB(COMP_Y);
@@ -857,7 +868,7 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
     CPelBuf orgCr  = cs.getOrgBuf (COMP_Cr);
     PelBuf predCr  = cs.getPredBuf(COMP_Cr);
 
-#if ENABLE_DYNAMIC_APPROX
+#if APPROX_STRATEGY == 1  // FRAME_LEVEL DYNAMIC
   
   #if ENABLE_ORIG_SB_APPROX
   ApproxHandler::addApproxIntraOrigSB(COMP_Cb, cu.slice->TLayer);
@@ -865,11 +876,23 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
   #endif
 
   #if ENABLE_NEIGH_SB_APPROX
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cb, PRED_BUF_UNFILTERED), COMP_Cb, cu.slice->TLayer, 0);
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cr, PRED_BUF_UNFILTERED), COMP_Cr, cu.slice->TLayer, 0);
+  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cb, PRED_BUF_UNFILTERED), COMP_Cb, 0, cu.slice->TLayer);
+  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cr, PRED_BUF_UNFILTERED), COMP_Cr, 0, cu.slice->TLayer);
   #endif
 
-#else // not ENABLE_DYNAMIC_APPROX ==> STATIC
+#elif APPROX_STRATEGY == 2 // CU_LEVEL DYNAMIC
+
+#if ENABLE_ORIG_SB_APPROX
+  ApproxHandler::addApproxIntraOrigSB(COMP_Cb, cu.slice->TLayer, cu.slice->poc, cu.lx(), cu.ly(), cu.lwidth(), cu.lheight());
+  ApproxHandler::addApproxIntraOrigSB(COMP_Cr, cu.slice->TLayer, cu.slice->poc, cu.lx(), cu.ly(), cu.lwidth(), cu.lheight());
+  #endif
+
+  #if ENABLE_NEIGH_SB_APPROX
+  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cb, PRED_BUF_UNFILTERED), COMP_Cb, 0, cu.slice->TLayer, cu.slice->poc, cu.lx(), cu.ly(), cu.lwidth(), cu.lheight());
+  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cr, PRED_BUF_UNFILTERED), COMP_Cr, 0, cu.slice->TLayer, cu.slice->poc, cu.lx(), cu.ly(), cu.lwidth(), cu.lheight());
+  #endif
+
+#else // APPROX_STRATEGY == 0 ==> STATIC
 
   #if ENABLE_ORIG_SB_APPROX
   ApproxHandler::addApproxIntraOrigSB(COMP_Cb);
@@ -890,7 +913,7 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
 #if ENABLE_ORIG_SB_APPROX
   orgCb.buf = ApproxHandler::initIntraOrigSB(orgCb, COMP_Cb);
   orgCr.buf = ApproxHandler::initIntraOrigSB(orgCr, COMP_Cr);
-#endif    
+#endif   
 
     DistParam distParamSadCb  = m_pcRdCost->setDistParam( orgCb, predCb, cu.cs->sps->bitDepths[ CH_C ], DF_SAD);
     DistParam distParamSatdCb = m_pcRdCost->setDistParam( orgCb, predCb, cu.cs->sps->bitDepths[ CH_C ], DF_HAD);
@@ -948,7 +971,7 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
     }
 
 #if ENABLE_ORIG_SB_APPROX || ENABLE_NEIGH_SB_APPROX
-  ApproxHandler::endGlobalLevel();
+    ApproxHandler::endGlobalLevel();
 #endif
 
 #if ENABLE_ORIG_SB_APPROX
