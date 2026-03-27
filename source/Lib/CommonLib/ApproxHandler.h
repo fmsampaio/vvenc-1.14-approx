@@ -14,7 +14,7 @@ namespace vvenc {
 
 #define NUM_RA_FRAME_LEVELS                     6
 
-#define APPROX_STRATEGY                         1            // 0 - Static; 1 - Dynamic; 2 - Dynamic (CU Level)
+#define APPROX_STRATEGY                         2            // 0 - Static; 1 - Dynamic; 2 - Dynamic (CU Level)
 
 #define ENABLE_ORIG_SB_APPROX                   1         
 #define ENABLE_NEIGH_SB_APPROX                  1

@@ -312,7 +312,8 @@ void ApproxHandler::addApproxIntraNeighSB(Pel* refBuffer, ComponentID comp, int 
   // std::cout << "CU [" << framePoc << "] (" << xCU << "," << yCU << ") --> ";
   // std::cout << ((comp == COMP_Y) ? "Y" : "C") << " ";
   
-  if(isRefIntra) {
+  // if(isRefIntra) {
+  if(isRefIntra & false) {
     // std::cout << "CU-Level --> " << cuLevelApproxLevel << std::endl;
     addBaselineApproxIntraNeighSB(refBuffer, comp, filt, cuLevelApproxLevel);
   }
@@ -325,7 +326,8 @@ void ApproxHandler::addApproxIntraNeighSB(Pel* refBuffer, ComponentID comp, int 
 void ApproxHandler::addApproxIntraOrigSB(ComponentID comp, int frameLevel, int framePoc, int xCU, int yCU, int wCU, int hCU) {
   bool isRefIntra = checkReferenceIsIntra(framePoc, xCU, yCU, wCU, hCU);
   
-  if(isRefIntra) {
+  // if(isRefIntra) {
+  if(isRefIntra & false) {
     addBaselineApproxIntraOrigSB(comp, cuLevelApproxLevel);
   }
   else {
