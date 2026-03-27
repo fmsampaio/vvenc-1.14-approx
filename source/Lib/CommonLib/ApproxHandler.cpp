@@ -289,6 +289,9 @@ bool ApproxHandler::checkReferenceIsIntra(int framePoc, int xCU, int yCU, int wC
 
   if(refFrame == -1) 
     return false;
+
+  if(intraMaps[framePoc] == NULL)
+    return false;
   
   int xBegin = xCU / INTRA_MAP_RESOLUTION;
   int yBegin = yCU / INTRA_MAP_RESOLUTION;
@@ -297,6 +300,9 @@ bool ApproxHandler::checkReferenceIsIntra(int framePoc, int xCU, int yCU, int wC
   
   for(int x = xBegin; x < xEnd; x++) {
     for(int y = yBegin; y < yEnd; y++) {
+      if(x < 0 || y < 0 || x >= frameWidth || y >= frameHeight)
+        continue;
+
       int pos = x + (y * (frameWidth / INTRA_MAP_RESOLUTION));
       if(intraMaps[refFrame][pos] == 1) {
         return true;
