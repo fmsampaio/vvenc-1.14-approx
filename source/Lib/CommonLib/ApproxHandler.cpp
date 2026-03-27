@@ -324,7 +324,7 @@ void ApproxHandler::addApproxIntraNeighSB(Pel* refBuffer, ComponentID comp, int 
     addBaselineApproxIntraNeighSB(refBuffer, comp, filt, cuLevelApproxLevel);
   }
   else {
-    std::cout << "Frame-Level --> " << dynApproxCfgs[frameLevel] << std::endl;
+    // std::cout << "Frame-Level --> " << dynApproxCfgs[frameLevel] << std::endl;
     addApproxIntraNeighSB(refBuffer, comp, filt, frameLevel);
   }
 }
