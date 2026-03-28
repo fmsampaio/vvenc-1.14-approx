@@ -49,7 +49,8 @@ class ApproxHandler {
         static FILE* dynApproxCfgFile;        
 
         static int frameWidth, frameHeight, numOfFrames;
-        static std::map<int, int*> intraMaps;  
+        static int intraMaps[33][3840*2160/(INTRA_MAP_RESOLUTION*INTRA_MAP_RESOLUTION)];  
+        // static std::map<int, int*> intraMaps;  
 
         // BASELINE APPROXIMATION FUNCTIONS
         static void allocIntraOrigSB();

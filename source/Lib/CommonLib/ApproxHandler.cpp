@@ -12,7 +12,8 @@ const Pel* ApproxHandler::bkpIntraOrigBufferCr;
 std::vector<int> ApproxHandler::dynApproxCfgs;
 FILE* ApproxHandler::dynApproxCfgFile;
 
-std::map<int, int*> ApproxHandler::intraMaps;
+// std::map<int, int*> ApproxHandler::intraMaps;
+int ApproxHandler::intraMaps[33][3840*2160/(INTRA_MAP_RESOLUTION*INTRA_MAP_RESOLUTION)];
 int ApproxHandler::frameWidth, ApproxHandler::frameHeight, ApproxHandler::numOfFrames;
 
 int ApproxHandler::cuLevelApproxLevel;
@@ -195,6 +196,13 @@ void ApproxHandler::initDynApprox(const char fileName[]) {
   } 
 
   fclose(dynApproxCfgFile);
+
+  for (int f = 0; f < 33; f++) {
+    for (int i = 0; i < 3840*2160/(INTRA_MAP_RESOLUTION*INTRA_MAP_RESOLUTION); i++) {
+      intraMaps[f][i] = 0;
+    }    
+  }
+
   
 }
 
@@ -221,14 +229,14 @@ void ApproxHandler::initCuLevelApprox(int width, int height, int nf) {
   frameHeight = height;
   numOfFrames = nf;
 
-  for (int f = 0; f < numOfFrames; f++)
-  {
-    intraMaps[f] = NULL;
-  }
+  // for (int f = 0; f < numOfFrames; f++)
+  // {
+  //   intraMaps[f] = NULL;
+  // }
 }
 
 void ApproxHandler::updateIntraMap(int framePoc, int xCU, int yCU, int wCU, int hCU) {  
-  int intraMapAllocSize = (frameWidth / INTRA_MAP_RESOLUTION) * (frameHeight / INTRA_MAP_RESOLUTION);
+  // int intraMapAllocSize = (frameWidth / INTRA_MAP_RESOLUTION) * (frameHeight / INTRA_MAP_RESOLUTION);
 
   int xBegin = xCU / INTRA_MAP_RESOLUTION;
   int yBegin = yCU / INTRA_MAP_RESOLUTION;
@@ -241,20 +249,7 @@ void ApproxHandler::updateIntraMap(int framePoc, int xCU, int yCU, int wCU, int 
   
   // std::cout << "[DBG] After expanding: " << xBegin << " " << xEnd << " " << yBegin << " " << yEnd << std::endl;
 
-  if(intraMaps[framePoc] == NULL) {
-    // std::cout << "[DBG] Allocing intra map for frame " << framePoc << std::endl;
-    
-    // intraMaps[framePoc] = (int*) malloc(intraMapAllocSize * sizeof(int));
-    intraMaps[framePoc] = (int*) xMalloc(int, intraMapAllocSize);
-    
-    // std::fill(intraMaps[framePoc], intraMaps[framePoc] + intraMapAllocSize, 0);
-    for (int i = 0; i < intraMapAllocSize; i++) {
-      intraMaps[framePoc][i] = 0;
-    }
-    
-    
-  }
-
+  
   for(int x = xBegin; x < xEnd; x++) {
     for(int y = yBegin; y < yEnd; y++) {
       if(x < 0 || y < 0 || x >= (frameWidth / INTRA_MAP_RESOLUTION) || y >= (frameHeight / INTRA_MAP_RESOLUTION))
@@ -305,8 +300,8 @@ bool ApproxHandler::checkReferenceIsIntra(int framePoc, int xCU, int yCU, int wC
   if(refFrame == -1) 
     return false;
 
-  if(intraMaps[framePoc] == NULL)
-    return false;
+  // if(intraMaps[framePoc] == NULL)
+  //   return false;
   
   int xBegin = xCU / INTRA_MAP_RESOLUTION;
   int yBegin = yCU / INTRA_MAP_RESOLUTION;
