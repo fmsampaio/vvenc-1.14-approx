@@ -243,8 +243,16 @@ void ApproxHandler::updateIntraMap(int framePoc, int xCU, int yCU, int wCU, int 
 
   if(intraMaps[framePoc] == NULL) {
     // std::cout << "[DBG] Allocing intra map for frame " << framePoc << std::endl;
-    intraMaps[framePoc] = (int*) malloc(intraMapAllocSize * sizeof(int));
-    std::fill(intraMaps[framePoc], intraMaps[framePoc] + intraMapAllocSize, 0);
+    
+    // intraMaps[framePoc] = (int*) malloc(intraMapAllocSize * sizeof(int));
+    intraMaps[framePoc] = (int*) xMalloc(int, intraMapAllocSize);
+    
+    // std::fill(intraMaps[framePoc], intraMaps[framePoc] + intraMapAllocSize, 0);
+    for (int i = 0; i < intraMapAllocSize; i++) {
+      intraMaps[framePoc][i] = 0;
+    }
+    
+    
   }
 
   for(int x = xBegin; x < xEnd; x++) {
