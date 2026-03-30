@@ -13,7 +13,7 @@ std::vector<int> ApproxHandler::dynApproxCfgs;
 FILE* ApproxHandler::dynApproxCfgFile;
 
 // std::map<int, int*> ApproxHandler::intraMaps;
-int ApproxHandler::intraMaps[33][3840*2160/(INTRA_MAP_RESOLUTION*INTRA_MAP_RESOLUTION)];
+int ApproxHandler::intraMaps[STATIC_NUM_OF_FRAMES][MAX_INTRA_MAP_SIZE];  
 int ApproxHandler::frameWidth, ApproxHandler::frameHeight, ApproxHandler::numOfFrames;
 
 int ApproxHandler::cuLevelApproxLevel;
@@ -197,8 +197,8 @@ void ApproxHandler::initDynApprox(const char fileName[]) {
 
   fclose(dynApproxCfgFile);
 
-  for (int f = 0; f < 33; f++) {
-    for (int i = 0; i < 3840*2160/(INTRA_MAP_RESOLUTION*INTRA_MAP_RESOLUTION); i++) {
+  for (int f = 0; f < STATIC_NUM_OF_FRAMES; f++) {
+    for (int i = 0; i < MAX_INTRA_MAP_SIZE; i++) {
       intraMaps[f][i] = 0;
     }    
   }
@@ -228,11 +228,6 @@ void ApproxHandler::initCuLevelApprox(int width, int height, int nf) {
   frameWidth = width;
   frameHeight = height;
   numOfFrames = nf;
-
-  // for (int f = 0; f < numOfFrames; f++)
-  // {
-  //   intraMaps[f] = NULL;
-  // }
 }
 
 void ApproxHandler::updateIntraMap(int framePoc, int xCU, int yCU, int wCU, int hCU) {  
@@ -299,9 +294,6 @@ bool ApproxHandler::checkReferenceIsIntra(int framePoc, int xCU, int yCU, int wC
 
   if(refFrame == -1) 
     return false;
-
-  // if(intraMaps[framePoc] == NULL)
-  //   return false;
   
   int xBegin = xCU / INTRA_MAP_RESOLUTION;
   int yBegin = yCU / INTRA_MAP_RESOLUTION;

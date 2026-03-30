@@ -35,6 +35,9 @@ namespace vvenc {
 #define INTRA_MAP_RESOLUTION                    4
 #define INTRA_MAP_EXPAND_FACTOR                 0
 
+#define MAX_INTRA_MAP_SIZE                      3840*2160/(INTRA_MAP_RESOLUTION*INTRA_MAP_RESOLUTION)
+#define STATIC_NUM_OF_FRAMES                    33
+
 class ApproxHandler {
     public:
         static Pel* approxIntraOrigBufferY;
@@ -49,7 +52,7 @@ class ApproxHandler {
         static FILE* dynApproxCfgFile;        
 
         static int frameWidth, frameHeight, numOfFrames;
-        static int intraMaps[33][3840*2160/(INTRA_MAP_RESOLUTION*INTRA_MAP_RESOLUTION)];  
+        static int intraMaps[STATIC_NUM_OF_FRAMES][MAX_INTRA_MAP_SIZE];  
         // static std::map<int, int*> intraMaps;  
 
         // BASELINE APPROXIMATION FUNCTIONS
