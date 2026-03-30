@@ -18,7 +18,7 @@ int ApproxHandler::frameWidth, ApproxHandler::frameHeight, ApproxHandler::numOfF
 
 int ApproxHandler::cuLevelApproxLevel;
 
-int FRAME_REFERENCES[33] = {-1, 2, 4, 2, 8, 4, 4, 6, 16, 10, 12, 10, 8, 14, 12, 14, -1, 18, 20, 18, 24, 22, 20, 22, 16, 26, 28, 26, 24, 30, 28, 30, -1 };
+int FRAME_REFERENCES[STATIC_NUM_OF_FRAMES] = {-1, 2, 4, 2, 8, 4, 4, 6, 16, 10, 12, 10, 8, 14, 12, 14, -1, 18, 20, 18, 24, 22, 20, 22, 16, 26, 28, 26, 24, 30, 28, 30, -1 };
 
 /*************************************
  * BASELINE APPROXIMATION FUNCTIONS
@@ -243,6 +243,11 @@ void ApproxHandler::updateIntraMap(int framePoc, int xCU, int yCU, int wCU, int 
   applyExpandFactor(&xBegin, &yBegin, &xEnd, &yEnd);
   
   // std::cout << "[DBG] After expanding: " << xBegin << " " << xEnd << " " << yBegin << " " << yEnd << std::endl;
+
+  if(framePoc >= STATIC_NUM_OF_FRAMES) {
+    std::cout << "Error at static allocation of the intra maps (NUM_OF_FRAMES)" << std::endl;
+    exit(EXIT_FAILURE);
+  }
 
   
   for(int x = xBegin; x < xEnd; x++) {
