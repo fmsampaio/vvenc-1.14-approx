@@ -11,10 +11,6 @@ namespace vvenc {
 #define SRAM_ECC_APPROX_MEDIUM_CONFIG           2            // SRAM 0.6V  ECC
 #define SRAM_ECC_APPROX_HIGH_CONFIG             3            // SRAM 0.55V ECC
 
-#define NUM_RA_FRAME_LEVELS                     6
-
-#define ENABLE_DYNAMIC_APPROX                   0            // 0 - Static; 1 - Dynamic
-
 #define ENABLE_ORIG_SB_APPROX                   1         
 #define ENABLE_NEIGH_SB_APPROX                  1
 
@@ -39,27 +35,20 @@ class ApproxHandler {
         static const Pel* bkpIntraOrigBufferCb;
         static const Pel* bkpIntraOrigBufferCr;
 
-        static std::vector<int> dynApproxCfgs;
-        static FILE* dynApproxCfgFile;        
-
+        // BASELINE APPROXIMATION FUNCTIONS      
         static void allocIntraOrigSB();
-        static void addApproxIntraOrigSB(ComponentID comp);
-        static void addApproxIntraOrigSB(ComponentID comp, int frameLevel);
-        static void removeApproxIntraOrigSB(ComponentID comp);
-
         static Pel* initIntraOrigSB(CPelBuf origBuffer, ComponentID comp);
         static const Pel* restoreIntraOrigSB(ComponentID comp);
-
-        static void addApproxIntraNeighSB(Pel* refBuffer, ComponentID comp, int filt);
-        static void addApproxIntraNeighSB(Pel* refBuffer, ComponentID comp, int frameLevel, int filt);
+        
+        static void addApproxIntraOrigSB(ComponentID comp, int approxLevel);
+        static void removeApproxIntraOrigSB(ComponentID comp);
+        
+        static void addApproxIntraNeighSB(Pel* refBuffer, ComponentID comp, int filt, int approxLevel);
         static void removeApproxIntraNeighSB(Pel* refBuffer);
         
         static void startGlobalLevel();
         static void endGlobalLevel();
 
-        static void initDynApprox(const char fileName[]);
-
 };
-
 
 }

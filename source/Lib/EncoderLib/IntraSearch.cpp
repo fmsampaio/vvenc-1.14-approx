@@ -218,28 +218,13 @@ void IntraSearch::xEstimateLumaRdModeList(int& numModesForFullRD,
     piOrg = cu.cs->getRspOrgBuf();
   }
 
-  #if ENABLE_DYNAMIC_APPROX
+#if ENABLE_ORIG_SB_APPROX
+ApproxHandler::addApproxIntraOrigSB(COMP_Y, SRAM_ECC_APPROX_LOW_CONFIG);
+#endif
 
-  #if ENABLE_ORIG_SB_APPROX
-  ApproxHandler::addApproxIntraOrigSB(COMP_Y, cu.slice->TLayer);
-  #endif
-
-  #if ENABLE_NEIGH_SB_APPROX
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_FILTERED), COMP_Y, cu.slice->TLayer, 1);
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_UNFILTERED), COMP_Y, cu.slice->TLayer, 0);
-  #endif
-
-#else // not ENABLE_DYNAMIC_APPROX ==> STATIC
-
-  #if ENABLE_ORIG_SB_APPROX
-  ApproxHandler::addApproxIntraOrigSB(COMP_Y);
-  #endif
-
-  #if ENABLE_NEIGH_SB_APPROX
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_FILTERED), COMP_Y, 1);
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_UNFILTERED), COMP_Y, 0);
-  #endif
-
+#if ENABLE_NEIGH_SB_APPROX
+ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_FILTERED), COMP_Y, 1, SRAM_ECC_APPROX_LOW_CONFIG);
+ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_UNFILTERED), COMP_Y, 0, SRAM_ECC_APPROX_LOW_CONFIG);
 #endif
 
 #if ENABLE_ORIG_SB_APPROX || ENABLE_NEIGH_SB_APPROX
@@ -852,30 +837,14 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
     CPelBuf orgCr  = cs.getOrgBuf (COMP_Cr);
     PelBuf predCr  = cs.getPredBuf(COMP_Cr);
 
-#if ENABLE_DYNAMIC_APPROX
-  
-  #if ENABLE_ORIG_SB_APPROX
-  ApproxHandler::addApproxIntraOrigSB(COMP_Cb, cu.slice->TLayer);
-  ApproxHandler::addApproxIntraOrigSB(COMP_Cr, cu.slice->TLayer);
-  #endif
+#if ENABLE_ORIG_SB_APPROX
+ApproxHandler::addApproxIntraOrigSB(COMP_Cb, SRAM_ECC_APPROX_LOW_CONFIG);
+ApproxHandler::addApproxIntraOrigSB(COMP_Cr, SRAM_ECC_APPROX_LOW_CONFIG);
+#endif
 
-  #if ENABLE_NEIGH_SB_APPROX
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cb, PRED_BUF_UNFILTERED), COMP_Cb, cu.slice->TLayer, 0);
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cr, PRED_BUF_UNFILTERED), COMP_Cr, cu.slice->TLayer, 0);
-  #endif
-
-#else // not ENABLE_DYNAMIC_APPROX ==> STATIC
-
-  #if ENABLE_ORIG_SB_APPROX
-  ApproxHandler::addApproxIntraOrigSB(COMP_Cb);
-  ApproxHandler::addApproxIntraOrigSB(COMP_Cr);
-  #endif
-
-  #if ENABLE_NEIGH_SB_APPROX
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cb, PRED_BUF_UNFILTERED), COMP_Cb, 0);
-  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cr, PRED_BUF_UNFILTERED), COMP_Cr, 0);
-  #endif
-
+#if ENABLE_NEIGH_SB_APPROX
+ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cb, PRED_BUF_UNFILTERED), COMP_Cb, 0, SRAM_ECC_APPROX_LOW_CONFIG);
+ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cr, PRED_BUF_UNFILTERED), COMP_Cr, 0, SRAM_ECC_APPROX_LOW_CONFIG);
 #endif
 
 #if ENABLE_ORIG_SB_APPROX || ENABLE_NEIGH_SB_APPROX
