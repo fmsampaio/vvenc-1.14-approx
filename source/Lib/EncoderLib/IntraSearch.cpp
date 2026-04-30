@@ -58,6 +58,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "vvenc/vvencCfg.h"
 
 #include "CommonLib/ApproxHandler.h"
+#include "CommonLib/MLApproxModel.h"
 
 //! \ingroup EncoderLib
 //! \{
@@ -219,12 +220,12 @@ void IntraSearch::xEstimateLumaRdModeList(int& numModesForFullRD,
   }
 
 #if ENABLE_ORIG_SB_APPROX
-ApproxHandler::addApproxIntraOrigSB(COMP_Y, SRAM_ECC_APPROX_LOW_CONFIG);
+ApproxHandler::addApproxIntraOrigSB(COMP_Y, MLApproxModel::getOrigApproxLevel());
 #endif
 
 #if ENABLE_NEIGH_SB_APPROX
-ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_FILTERED), COMP_Y, 1, SRAM_ECC_APPROX_LOW_CONFIG);
-ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_UNFILTERED), COMP_Y, 0, SRAM_ECC_APPROX_LOW_CONFIG);
+ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_FILTERED), COMP_Y, 1, MLApproxModel::getNeighApproxLevel());
+ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_UNFILTERED), COMP_Y, 0, MLApproxModel::getNeighApproxLevel());
 #endif
 
 #if ENABLE_ORIG_SB_APPROX || ENABLE_NEIGH_SB_APPROX
@@ -838,13 +839,13 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
     PelBuf predCr  = cs.getPredBuf(COMP_Cr);
 
 #if ENABLE_ORIG_SB_APPROX
-ApproxHandler::addApproxIntraOrigSB(COMP_Cb, SRAM_ECC_APPROX_LOW_CONFIG);
-ApproxHandler::addApproxIntraOrigSB(COMP_Cr, SRAM_ECC_APPROX_LOW_CONFIG);
+ApproxHandler::addApproxIntraOrigSB(COMP_Cb, MLApproxModel::getOrigApproxLevel());
+ApproxHandler::addApproxIntraOrigSB(COMP_Cr, MLApproxModel::getOrigApproxLevel());
 #endif
 
 #if ENABLE_NEIGH_SB_APPROX
-ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cb, PRED_BUF_UNFILTERED), COMP_Cb, 0, SRAM_ECC_APPROX_LOW_CONFIG);
-ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cr, PRED_BUF_UNFILTERED), COMP_Cr, 0, SRAM_ECC_APPROX_LOW_CONFIG);
+ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cb, PRED_BUF_UNFILTERED), COMP_Cb, 0, MLApproxModel::getNeighApproxLevel());
+ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cr, PRED_BUF_UNFILTERED), COMP_Cr, 0, MLApproxModel::getNeighApproxLevel());
 #endif
 
 #if ENABLE_ORIG_SB_APPROX || ENABLE_NEIGH_SB_APPROX
