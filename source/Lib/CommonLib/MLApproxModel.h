@@ -1,3 +1,4 @@
+#include <iostream>
 #include <cstdlib> // Necessário para rand() e srand()
 #include <ctime>   // Necessário para time()
 

@@ -219,13 +219,15 @@ void IntraSearch::xEstimateLumaRdModeList(int& numModesForFullRD,
     piOrg = cu.cs->getRspOrgBuf();
   }
 
+  MLApproxModel::defineApproxLevel();
+
 #if ENABLE_ORIG_SB_APPROX
-ApproxHandler::addApproxIntraOrigSB(COMP_Y, MLApproxModel::getOrigApproxLevel());
+  ApproxHandler::addApproxIntraOrigSB(COMP_Y, MLApproxModel::getOrigApproxLevel());
 #endif
 
 #if ENABLE_NEIGH_SB_APPROX
-ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_FILTERED), COMP_Y, 1, MLApproxModel::getNeighApproxLevel());
-ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_UNFILTERED), COMP_Y, 0, MLApproxModel::getNeighApproxLevel());
+  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_FILTERED), COMP_Y, 1, MLApproxModel::getNeighApproxLevel());
+  ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Y, PRED_BUF_UNFILTERED), COMP_Y, 0, MLApproxModel::getNeighApproxLevel());
 #endif
 
 #if ENABLE_ORIG_SB_APPROX || ENABLE_NEIGH_SB_APPROX
@@ -838,23 +840,25 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
     CPelBuf orgCr  = cs.getOrgBuf (COMP_Cr);
     PelBuf predCr  = cs.getPredBuf(COMP_Cr);
 
+    MLApproxModel::defineApproxLevel();
+
 #if ENABLE_ORIG_SB_APPROX
-ApproxHandler::addApproxIntraOrigSB(COMP_Cb, MLApproxModel::getOrigApproxLevel());
-ApproxHandler::addApproxIntraOrigSB(COMP_Cr, MLApproxModel::getOrigApproxLevel());
+    ApproxHandler::addApproxIntraOrigSB(COMP_Cb, MLApproxModel::getOrigApproxLevel());
+    ApproxHandler::addApproxIntraOrigSB(COMP_Cr, MLApproxModel::getOrigApproxLevel());
 #endif
 
 #if ENABLE_NEIGH_SB_APPROX
-ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cb, PRED_BUF_UNFILTERED), COMP_Cb, 0, MLApproxModel::getNeighApproxLevel());
-ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cr, PRED_BUF_UNFILTERED), COMP_Cr, 0, MLApproxModel::getNeighApproxLevel());
+    ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cb, PRED_BUF_UNFILTERED), COMP_Cb, 0, MLApproxModel::getNeighApproxLevel());
+    ApproxHandler::addApproxIntraNeighSB(getRefBufferPtr(COMP_Cr, PRED_BUF_UNFILTERED), COMP_Cr, 0, MLApproxModel::getNeighApproxLevel());
 #endif
 
 #if ENABLE_ORIG_SB_APPROX || ENABLE_NEIGH_SB_APPROX
-  ApproxHandler::startGlobalLevel();
+    ApproxHandler::startGlobalLevel();
 #endif
 
 #if ENABLE_ORIG_SB_APPROX
-  orgCb.buf = ApproxHandler::initIntraOrigSB(orgCb, COMP_Cb);
-  orgCr.buf = ApproxHandler::initIntraOrigSB(orgCr, COMP_Cr);
+    orgCb.buf = ApproxHandler::initIntraOrigSB(orgCb, COMP_Cb);
+    orgCr.buf = ApproxHandler::initIntraOrigSB(orgCr, COMP_Cr);
 #endif    
 
     DistParam distParamSadCb  = m_pcRdCost->setDistParam( orgCb, predCb, cu.cs->sps->bitDepths[ CH_C ], DF_SAD);
