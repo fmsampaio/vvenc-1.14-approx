@@ -13,13 +13,11 @@ namespace vvenc {
 
 #define ENABLE_ORIG_SB_APPROX                   1         
 #define ENABLE_NEIGH_SB_APPROX                  1
-
-#define ORIG_SB_CONFIG                          1            // Static Approximation
+          
 #define ORIG_SB_BUFFER_Y                        1
 #define ORIG_SB_BUFFER_CB                       2
 #define ORIG_SB_BUFFER_CR                       3
 
-#define NEIGH_SB_CONFIG                         2            // Static Approximation
 #define NEIGH_SB_BUFFER_Y                       4
 #define NEIGH_SB_BUFFER_Y_FILT                  5
 #define NEIGH_SB_BUFFER_CB                      6
