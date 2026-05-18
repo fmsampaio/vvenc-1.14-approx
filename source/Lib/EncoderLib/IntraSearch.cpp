@@ -219,7 +219,7 @@ void IntraSearch::xEstimateLumaRdModeList(int& numModesForFullRD,
     piOrg = cu.cs->getRspOrgBuf();
   }
 
-  MLApproxModel::defineApproxLevel();
+  MLApproxModel::defineApproxLevel( *cu.cs, cu, piOrg.buf, piOrg.stride, cu.Y() );
 
 #if ENABLE_ORIG_SB_APPROX
   ApproxHandler::addApproxIntraOrigSB(COMP_Y, MLApproxModel::getOrigApproxLevel());
@@ -845,7 +845,7 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
     CPelBuf orgCr  = cs.getOrgBuf (COMP_Cr);
     PelBuf predCr  = cs.getPredBuf(COMP_Cr);
 
-    MLApproxModel::defineApproxLevel();
+    MLApproxModel::defineApproxLevel( *cu.cs, cu, orgCb.buf, orgCb.stride, cu.Cb() );
 
 #if ENABLE_ORIG_SB_APPROX
     ApproxHandler::addApproxIntraOrigSB(COMP_Cb, MLApproxModel::getOrigApproxLevel());
