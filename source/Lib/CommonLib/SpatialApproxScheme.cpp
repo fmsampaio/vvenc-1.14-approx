@@ -65,16 +65,22 @@ void SpatialApproxScheme::reportSpatialApproxConfigs() {
 
 }
 
-void SpatialApproxScheme::defineApproxLevel() {  //Felipe: definição aleatório dos níveis de aproximação para exemplo...
-    std::srand(std::time(0));
+void SpatialApproxScheme::defineApproxLevel(ComponentID comp, int xCU, int yCU, int wCU, int hCU) { 
+    int regionId = getApproxRegionId(comp, xCU, yCU, wCU, hCU);
 
-    // Gera um número entre 1 e 4
-    int randLevel = (std::rand() % 4) + 1;
+    std::cout << "[DBG] CU (" << xCU << "," << yCU << ") [" << wCU << "x" << hCU << "] {" << regionId << "} --> " << spatialApproxConfig[regionId] << std::endl;
+    
+    origApproxLevel = spatialApproxConfig[regionId];
+    neighApproxLevel = spatialApproxConfig[regionId];
+}
 
-    // std::cout << "[DBG] Sorted approx level: " << randLevel << std::endl;
-
-    origApproxLevel = randLevel;
-    neighApproxLevel = randLevel;
+int SpatialApproxScheme::getApproxRegionId(ComponentID comp, int xCU, int yCU, int wCU, int hCU) {
+    int colWidth = getColWidth(comp);
+    int rowHeight = getRowHeight(comp);
+    int targetCol = xCU / colWidth;
+    int targetRow = yCU / rowHeight;
+    
+    return targetCol + targetRow * cols;
 }
 
 int SpatialApproxScheme::getNeighApproxLevel() {

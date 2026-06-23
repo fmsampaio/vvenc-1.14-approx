@@ -219,7 +219,15 @@ void IntraSearch::xEstimateLumaRdModeList(int& numModesForFullRD,
     piOrg = cu.cs->getRspOrgBuf();
   }
 
-  SpatialApproxScheme::defineApproxLevel();
+#if ENABLE_SPATIAL_APPROX
+    int xCU = cu.lx();
+    int yCU = cu.ly();
+    int wCU = cu.lwidth();
+    int hCU = cu.lheight();
+
+    std::cout << "[DBG] Luma Approx:" << std::endl;
+    SpatialApproxScheme::defineApproxLevel(COMP_Y, xCU, yCU, wCU, hCU);
+#endif
 
 #if ENABLE_ORIG_SB_APPROX
   ApproxHandler::addApproxIntraOrigSB(COMP_Y, SpatialApproxScheme::getOrigApproxLevel());
@@ -845,7 +853,15 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
     CPelBuf orgCr  = cs.getOrgBuf (COMP_Cr);
     PelBuf predCr  = cs.getPredBuf(COMP_Cr);
 
-    SpatialApproxScheme::defineApproxLevel();
+#if ENABLE_SPATIAL_APPROX
+    int xCU = cu.Cb().x;
+    int yCU = cu.Cb().y;
+    int wCU = cu.Cb().width;
+    int hCU = cu.Cb().height;
+
+    std::cout << "[DBG] Chroma Approx:" << std::endl;
+    SpatialApproxScheme::defineApproxLevel(COMP_Cb, xCU, yCU, wCU, hCU);
+#endif
 
 #if ENABLE_ORIG_SB_APPROX
     ApproxHandler::addApproxIntraOrigSB(COMP_Cb, SpatialApproxScheme::getOrigApproxLevel());
