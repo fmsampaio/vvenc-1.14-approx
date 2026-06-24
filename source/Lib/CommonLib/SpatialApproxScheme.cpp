@@ -56,8 +56,8 @@ void SpatialApproxScheme::reportSpatialApproxConfigs() {
             int yTop = (frameHeight / rows) * r;
             int yBottom = (frameHeight / rows) * (c + 1);
 
-            std::cout << "Left/Top: (" << xLeft << "," << yTop << ")" << std::endl;
-            std::cout << "Right/Bottom: (" << xRight << "," << yBottom << ")" << std::endl;
+            std::cout << "Left/Top: (" << xLeft << "," << yTop << ") ";
+            std::cout << "Right/Bottom: (" << xRight << "," << yBottom << ") ";
 
             std::cout << "Approx. Level: " << spatialApproxConfig[regionId] << std::endl;
         }        
@@ -68,7 +68,7 @@ void SpatialApproxScheme::reportSpatialApproxConfigs() {
 void SpatialApproxScheme::defineApproxLevel(ComponentID comp, int xCU, int yCU, int wCU, int hCU) { 
     int regionId = getApproxRegionId(comp, xCU, yCU, wCU, hCU);
 
-    std::cout << "[DBG] CU (" << xCU << "," << yCU << ") [" << wCU << "x" << hCU << "] {" << regionId << "} --> " << spatialApproxConfig[regionId] << std::endl;
+    // std::cout << "[DBG] CU (" << xCU << "," << yCU << ") [" << wCU << "x" << hCU << "] {" << regionId << "} --> " << spatialApproxConfig[regionId] << std::endl;
     
     origApproxLevel = spatialApproxConfig[regionId];
     neighApproxLevel = spatialApproxConfig[regionId];

@@ -225,7 +225,7 @@ void IntraSearch::xEstimateLumaRdModeList(int& numModesForFullRD,
     int wCU = cu.lwidth();
     int hCU = cu.lheight();
 
-    std::cout << "[DBG] Luma Approx:" << std::endl;
+    // std::cout << "[DBG] Luma Approx:" << std::endl;
     SpatialApproxScheme::defineApproxLevel(COMP_Y, xCU, yCU, wCU, hCU);
 #endif
 
@@ -859,7 +859,7 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
     int wCU = cu.Cb().width;
     int hCU = cu.Cb().height;
 
-    std::cout << "[DBG] Chroma Approx:" << std::endl;
+    // std::cout << "[DBG] Chroma Approx:" << std::endl;
     SpatialApproxScheme::defineApproxLevel(COMP_Cb, xCU, yCU, wCU, hCU);
 #endif
 
