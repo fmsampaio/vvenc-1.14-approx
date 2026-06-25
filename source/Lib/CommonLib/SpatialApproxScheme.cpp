@@ -54,7 +54,7 @@ void SpatialApproxScheme::reportSpatialApproxConfigs() {
             int xLeft = (frameWidth / cols) * c;
             int xRight = (frameWidth / cols) * (c + 1);
             int yTop = (frameHeight / rows) * r;
-            int yBottom = (frameHeight / rows) * (c + 1);
+            int yBottom = (frameHeight / rows) * (r + 1);
 
             std::cout << "Left/Top: (" << xLeft << "," << yTop << ") ";
             std::cout << "Right/Bottom: (" << xRight << "," << yBottom << ") ";
