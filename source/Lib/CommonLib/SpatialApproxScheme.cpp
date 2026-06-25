@@ -79,6 +79,9 @@ int SpatialApproxScheme::getApproxRegionId(ComponentID comp, int xCU, int yCU, i
     int rowHeight = getRowHeight(comp);
     int targetCol = xCU / colWidth;
     int targetRow = yCU / rowHeight;
+
+    targetRow = (targetRow >= rows) ? rows - 1 : targetRow;
+    targetCol = (targetCol >= cols) ? cols - 1 : targetCol;
     
     return targetCol + targetRow * cols;
 }
