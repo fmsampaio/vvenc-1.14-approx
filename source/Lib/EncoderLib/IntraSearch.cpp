@@ -180,7 +180,7 @@ void IntraSearch::xEstimateLumaRdModeList(int& numModesForFullRD,
   static_vector<ModeInfo, FAST_UDI_MAX_RDMODE_NUM>& RdModeList,
   static_vector<ModeInfo, FAST_UDI_MAX_RDMODE_NUM>& HadModeList,
   static_vector<double, FAST_UDI_MAX_RDMODE_NUM>& CandCostList,
-  static_vector<double, FAST_UDI_MAX_RDMODE_NUM>& CandHadList, CodingUnit& cu, bool testMip )
+  static_vector<double, FAST_UDI_MAX_RDMODE_NUM>& CandHadList, CodingUnit& cu, bool testMip, double bestCostInter )
 {
   PROFILER_SCOPE_AND_STAGE_EXT( 1, _TPROF, P_INTRA_EST_RD_CAND, cu.cs, CH_L );
   const uint16_t intra_ctx_size = Ctx::IntraLumaMpmFlag.size() + Ctx::IntraLumaPlanarFlag.size() + Ctx::MultiRefLineIdx.size() + Ctx::ISPMode.size() + Ctx::MipFlag.size();
@@ -219,7 +219,7 @@ void IntraSearch::xEstimateLumaRdModeList(int& numModesForFullRD,
     piOrg = cu.cs->getRspOrgBuf();
   }
 
-  MLApproxModel::defineApproxLevel( *cu.cs, cu, piOrg.buf, piOrg.stride, cu.Y() );
+  MLApproxModel::defineApproxLevel( *cu.cs, cu, bestCostInter );
 
 #if ENABLE_ORIG_SB_APPROX
   ApproxHandler::addApproxIntraOrigSB(COMP_Y, MLApproxModel::getOrigApproxLevel());
@@ -509,8 +509,7 @@ bool IntraSearch::estIntraPredLumaQT(CodingUnit &cu, Partitioner &partitioner, d
     m_ispTestedModes[0].init(0, 0, 0);
   }
 
-  xEstimateLumaRdModeList(numModesForFullRD, RdModeList, HadModeList, CandCostList, CandHadList, cu, testMip);
-
+  xEstimateLumaRdModeList(numModesForFullRD, RdModeList, HadModeList, CandCostList, CandHadList, cu, testMip, bestCost);
   CHECK( (size_t)numModesForFullRD != RdModeList.size(), "Inconsistent state!" );
 
   // after this point, don't use numModesForFullRD
@@ -845,7 +844,7 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit& cu, Partitioner& partitioner
     CPelBuf orgCr  = cs.getOrgBuf (COMP_Cr);
     PelBuf predCr  = cs.getPredBuf(COMP_Cr);
 
-    MLApproxModel::defineApproxLevel( *cu.cs, cu, orgCb.buf, orgCb.stride, cu.Cb() );
+    MLApproxModel::defineApproxLevel( *cu.cs, cu, xFindInterCUCost( cu ) );
 
 #if ENABLE_ORIG_SB_APPROX
     ApproxHandler::addApproxIntraOrigSB(COMP_Cb, MLApproxModel::getOrigApproxLevel());

@@ -57,7 +57,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "vvenc/vvenc.h"
 #include "apputils/Stats.h"
 
-
 using namespace std;
 
 //! \ingroup EncoderApp

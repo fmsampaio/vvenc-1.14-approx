@@ -58,6 +58,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "EncGOP.h"
 #include "CommonLib/x86/CommonDefX86.h"
 
+#include "CommonLib/MLFeaturesManager.h"
+
 //! \ingroup EncoderLib
 //! \{
 
@@ -111,6 +113,13 @@ void EncLib::initEncoderLib( const vvenc_config& encCfg )
 {
   // copy config parameter
   const_cast<VVEncCfg&>(m_encCfg) = encCfg;
+
+  int qp       = encCfg.m_QP;
+  int bitDepth = encCfg.m_internalBitDepth[vvenc::CH_L];
+  int width    = encCfg.m_SourceWidth;
+  int height   = encCfg.m_SourceHeight;
+
+    MLFeaturesManager::init("Sequence", "approx", qp, bitDepth, width, height);
 
 #if defined( REAL_TARGET_X86 ) && defined( _MSC_VER ) && _MSC_VER >= 1938 && _MSC_VER < 1939
   if( read_x86_extension_flags() >= x86_simd::AVX2 )
