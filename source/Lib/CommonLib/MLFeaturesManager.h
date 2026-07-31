@@ -6,13 +6,12 @@
 
 #include "CommonDef.h"
 
-
-#define SAVE_ML_FEATURES_CSV 1
+#define SAVE_ML_FEATURES_CSV 0
 
 namespace vvenc {
+
 class CodingStructure;
 class CodingUnit;
-}
 
 struct MLFeatureData {
   int framePoc;
@@ -153,7 +152,9 @@ private:
 
 public:
   static void init( const std::string& vName, const std::string& preset, int tQp, int bDepth, int fWidth, int fHeight );
+  
   static void finish();
+  
   static MLFeatureData extractFeatures( const vvenc::CodingStructure& cs, const vvenc::CodingUnit& cu, double bestCostInter );
   static void saveFeatures( const MLFeatureData& data );
 
@@ -161,3 +162,5 @@ public:
   static int getFrameHeight() { return frameHeight; }
   static int getTargetQP() { return targetQP; }
 };
+
+}

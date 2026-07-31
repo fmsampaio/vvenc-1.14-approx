@@ -284,9 +284,6 @@ set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 # Enable multithreading
 find_package( Threads REQUIRED )
 
-# Find OpenCV for MLApproxModel
-find_package( OpenCV REQUIRED )
-
 # set _WIN32_WINNT
 if( WIN32 )
   # set _WIN32_WINT version global

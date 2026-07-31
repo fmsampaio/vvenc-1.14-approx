@@ -54,6 +54,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "apputils/ParseArg.h"
 
 #include "vvenc/vvenc.h"
+#include "../../Lib/CommonLib/MLFeaturesManager.h"
 
 //! \ingroup EncoderApp
 //! \{
@@ -112,6 +113,8 @@ int main(int argc, char* argv[])
   auto encTime = std::chrono::duration_cast<std::chrono::milliseconds>( endTime - startTime).count();
 
   delete pcEncApp;
+
+  vvenc::MLFeaturesManager::finish();
 
   msgApp( VVENC_INFO, "\nvvencFFapp [info]: finished @ %s", std::ctime(&endTime2) );
   msgApp( VVENC_INFO, "vvencFFapp [info]: Total Time: %12.3f sec. [user] %12.3f sec. [elapsed]\n", (endClock - startClock) * 1.0 / CLOCKS_PER_SEC, encTime / 1000.0);

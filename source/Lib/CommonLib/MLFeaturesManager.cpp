@@ -5,11 +5,14 @@
 #include "Reshape.h"
 #include "Unit.h"
 #include "UnitTools.h"
+#include "MLApproxModel.h"
 
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <vector>
+
+namespace vvenc {
 
 std::ofstream MLFeaturesManager::featFp;
 std::mutex MLFeaturesManager::writeMutex;
@@ -623,5 +626,9 @@ void MLFeaturesManager::finish()
   {
     featFp.close();
   }
+
 #endif
+vvenc::MLApproxModel::printSummary();
+}
+
 }
