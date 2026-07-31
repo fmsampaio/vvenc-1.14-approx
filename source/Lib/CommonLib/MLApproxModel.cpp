@@ -17,6 +17,9 @@ namespace vvenc {
 int MLApproxModel::origApproxLevel = 1;
 int MLApproxModel::neighApproxLevel = 1;
 
+int MLApproxModel::baseApproxLevel = 4;
+int MLApproxModel::fallbackApproxLevel = 1;
+
 long long MLApproxModel::countTotalEval = 0;
 long long MLApproxModel::countIsSplit = 0;
 long long MLApproxModel::countNotIntraKept = 0;
@@ -73,8 +76,8 @@ void MLApproxModel::defineApproxLevel( const CodingStructure& cs, const CodingUn
     countTotalEval++;
     if( cs.slice->isIntra() )
     {
-        origApproxLevel = kSramLossless;
-        neighApproxLevel = kSramLossless;
+        origApproxLevel = baseApproxLevel;
+        neighApproxLevel = baseApproxLevel;
         return;
     }
 
@@ -94,7 +97,7 @@ void MLApproxModel::defineApproxLevel( const CodingStructure& cs, const CodingUn
     if (isSplit == 1) 
     {
         countIsSplit++;
-        approxLevel = kSramApproxHighConfig; 
+        approxLevel = baseApproxLevel; 
     }
     else 
     {
@@ -104,12 +107,12 @@ void MLApproxModel::defineApproxLevel( const CodingStructure& cs, const CodingUn
         if (isIntraKept == 0)
         {
             countNotIntraKept++;
-            approxLevel = kSramApproxHighConfig;
+            approxLevel = baseApproxLevel;
         }
         else
         {
             countLossless++;
-            approxLevel = kSramLossless;
+            approxLevel = fallbackApproxLevel;
         }
     }
 
@@ -138,6 +141,9 @@ void MLApproxModel::printSummary()
     double pctTotalSkipped = pctSplit + pctNotIntra;
 
     std::cout << std::fixed << std::setprecision(2);
+    std::cout << "Base Approx Level Used    : " << baseApproxLevel << "\n";
+    std::cout << "Fallback Approx Level Used: " << fallbackApproxLevel << "\n";
+    std::cout << "-------------------------------------------------------\n";
     std::cout << "Total Blocks Evaluated    : " << countTotalEval << " (100.00%)\n";
     std::cout << " -> Approximated (IsSplit): " << countIsSplit << " (" << pctSplit << "%)\n";
     std::cout << " -> Approximated (!Intra) : " << countNotIntraKept << " (" << pctNotIntra << "%)\n";
@@ -147,4 +153,16 @@ void MLApproxModel::printSummary()
     std::cout << "=======================================================\n";
 }
 
+
 } // namespace vvenc
+
+
+extern "C" {
+    void VVENC_DECL setMLBaseApproxLevel_C(int level) { 
+        vvenc::MLApproxModel::setBaseApproxLevel(level); 
+    }
+
+    void VVENC_DECL setMLFallbackApprox_C(int level) { 
+        vvenc::MLApproxModel::setFallbackApproxLevel(level); 
+    }
+}

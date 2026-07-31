@@ -200,9 +200,9 @@ target_compile_options( ${LIB_NAME} PRIVATE $<$<TARGET_EXISTS:nlohmann_json::nlo
 target_compile_definitions( ${LIB_NAME} PRIVATE $<$<TARGET_EXISTS:nlohmann_json::nlohmann_json>:$<TARGET_PROPERTY:nlohmann_json::nlohmann_json,INTERFACE_COMPILE_DEFINITIONS>> )
 
 if( TARGET INTEL_ITT)
-  target_link_libraries( ${LIB_NAME} PRIVATE INTEL_ITT Threads::Threads opencv_core opencv_imgproc )
+  target_link_libraries( ${LIB_NAME} PRIVATE INTEL_ITT Threads::Threads )
 else()
-  target_link_libraries( ${LIB_NAME} PRIVATE Threads::Threads opencv_core opencv_imgproc )
+  target_link_libraries( ${LIB_NAME} PRIVATE Threads::Threads )
 endif()
 
 if( CMAKE_USE_PTHREADS_INIT )

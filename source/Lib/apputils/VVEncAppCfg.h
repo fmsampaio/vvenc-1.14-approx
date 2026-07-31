@@ -69,6 +69,10 @@ POSSIBILITY OF SUCH DAMAGE.
 using namespace std;
 namespace po = apputils::program_options;
 
+extern "C" {
+    void setMLBaseApproxLevel_C(int level);
+    void setMLFallbackApprox_C(int level);
+}
 namespace apputils {
 
 //! \ingroup apputils
@@ -475,6 +479,8 @@ public:
                                                                ///< values that are not arbitrary must be quoted "\"values\""
                                                                ///< e.b. "bitrate=1000000 passes=1 QpInValCb=\"17 22 34 42\"" 
   std::string  m_logoFileName;                                 ///< logo overlay file
+  int          m_MLBaseApprox                 = 4;             ///< Base approximation level applied by the ML model
+  int          m_MLFallbackApprox             = 1;             ///< Fallback approximation level 
 private:
   const bool   m_easyMode                      = false;        ///< internal state flag, if expert or easy mode
 
@@ -787,6 +793,8 @@ int parse( int argc, char* argv[], vvenc_config* c, std::ostream& rcOstr )
   opts.setSubSection("General Options");
   opts.addOptions()
   ("additional",                                        m_additionalSettings,                               "additional options as string (e.g: \"bitrate=1000000 passes=1\")")
+  ("MLBaseApprox",                                      m_MLBaseApprox,                                     "Base approximation level applied by the ML model (default: 4)")  
+  ("MLFallbackApprox",                                  m_MLFallbackApprox,                                 "Fallback approx level for important blocks (default: 1 Lossless)")
   ;
 
   opts.setSubSection("Input Options");
@@ -1437,6 +1445,9 @@ int parse( int argc, char* argv[], vvenc_config* c, std::ostream& rcOstr )
     else
       ret = -1;
   }
+
+  setMLBaseApproxLevel_C(m_MLBaseApprox);
+  setMLFallbackApprox_C(m_MLFallbackApprox);
 
   return ret;
 }
